@@ -194,10 +194,6 @@ Pkg.add(["FileIO", "CSV", "DataFrames", "HDF5", "Random", "Distributions", "ArgP
 
 Python packages:
 
-- yaml 
-- h5py 
-- numpy
-- matplotlib 
-- pandas
+Find these in `requirements.txt`
 
 
