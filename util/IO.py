@@ -112,7 +112,7 @@ def read_yaml_to_dict(filepath):
         print(f"Error reading the YAML file: {e}")
         return None
     
-def run_model_job(parameters, julia='julia', model='run_model.jl'):
+def run_model_job(parameters, julia='julia', model='run_model.jl', model_log='tmp.log'):
     """
     Runs the Julia model with the specified parameters.
     
@@ -146,8 +146,19 @@ def run_model_job(parameters, julia='julia', model='run_model.jl'):
         '--sample_size', str(parameters['sample_size'])
     ]
 
+    cmd = [str(x) for x in args]
     # Call the Julia script with the specified parameters
-    sp.call([str(x) for x in args])
+    # sp.call([str(x) for x in args])
+    proc = sp.Popen(cmd, stdout=sp.PIPE, stderr=sp.PIPE, shell=False)
+    out, err = proc.communicate()
+    
+    with open(model_log, 'w') as outlog:
+        outlog.write("STDOUT:\n")
+        outlog.write(out.decode())
+        outlog.write("\n\nSTDERR:\n")
+        outlog.write(err.decode())
+
+    return(proc.returncode)
 
 def process_data(out, muts, outdir, min_vaf=0.01, germline_cutoff=-1.*1/12., save_files = True):
     init = out['pops/inutero'][0:]
