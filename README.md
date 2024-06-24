@@ -2,7 +2,7 @@
 
 ## The Model
 
-# Parameters
+### Parameters
 
 #### Normal Pop
 
@@ -76,7 +76,9 @@ mutation	raw_vaf	vaf	t	is_driver	seed_parent	group
 140	0.0164	0.017699115044247787	3	0	0	Normal
 202	0.01075	0.011111111111111112	3	0	0	Normal
 169	0.01265	0.010416666666666666	3	0	0	Normal
-
+23921445	0.014511873350923483	0.0	13	0	1	Polyp
+23921459	0.025065963060686015	0.03669724770642202	13	0	1	Polyp
+23922455	0.0316622691292876	0.020202020202020204	15	0	1	Polyp
 ```
 
 The model outputs a `csv` file with the following columns:
