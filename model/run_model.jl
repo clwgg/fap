@@ -226,7 +226,7 @@ function main()
     #~~~~~~~~~ STAGE 1 IN UTERO: Timescale == Months
     init_birth = log(initSize) / 9.0
 
-    m1 = Model_BD(Int64(initSize), birth_rate / 12.0, death_rate / 12.0, mut_rate / 12.0, adv_mut_rate / 12.0, s_coef / 12.0, cellArr, adv_clones_arr, cellGenomes, parentCellArr, mutId, cloneId, mutInductionTimes)
+    m1 = Model_BD(Int64(initSize), init_birth , death_rate / 12.0, mut_rate / 12.0, adv_mut_rate / 12.0, s_coef , cellArr, adv_clones_arr, cellGenomes, parentCellArr, mutId, cloneId, mutInductionTimes)
 
     cellArr, cellGenomes, adv_clones_arr, mutId, driver_muts, model, popsize1 = expandPop(m1, group="inutero", verbose=verbose, init_birth=init_birth, max_time=9)
 
@@ -239,9 +239,9 @@ function main()
 
     df1 = build_output_table(cellGenomes, m1.mutInductionTimes, driver_muts, "inutero", origindict, mean_depth, sd_depth, sample_size)
 
+   #~~~~~~~~~~ STAGE 2 NORMAL: Timescale == 6 months
     m = Model_BD(initSize, birth_rate/2., (death_rate)/2., mut_rate/2., adv_mut_rate/2., s_coef, cellArr, adv_clones_arr, cellGenomes, parentCellArr, mutId, cloneId, mutInductionTimes)
 
-   #~~~~~~~~~~ STAGE 2 NORMAL: Timescale == 6 months
     cellArr, cellGenomes, adv_clones_arr, mutId, driver_muts_fission, model, popsize2 = expandPop(m, group="fission", verbose=verbose, max_time=Int(polyp_init_time))
 
     push!(mutId_delineator, mutId)
