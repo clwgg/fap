@@ -75,7 +75,7 @@ function count_instances(value, list_of_lists)
     return count
 end
 
-function build_output_table(cellGenomes, mutInductionTimes, driver_muts, group, seed_origin, mean_depth, sd_depth, sample_size=10000)
+function build_output_table(cellGenomes, mutInductionTimes, driver_muts, group, seed_origin, mean_depth, sd_depth, sample_size=15000)
     # Get population size
     pop_size = length(cellGenomes)
 

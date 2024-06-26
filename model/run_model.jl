@@ -260,7 +260,12 @@ function main()
     end
 
     #~~~~~~~~~ Polyp growth
-    seed_idxs = sample(1:length(cellArr), num_seeds, replace=false)
+    too_pick = deepcopy(adv_clones_arr)
+    # add one to all of too_pick
+    too_pick = too_pick .+ 1
+    too_pick = too_pick ./ sum(too_pick)
+    seed_idxs = sample(1:length(cellArr), Weights(too_pick), num_seeds, replace=false)
+    global too_pick # Remove this from environment
     cellArr = deepcopy(cellArr[seed_idxs])
     parentCellArr = zeros(Int64, final_pop_size)
     cellGenomes = deepcopy(cellGenomes[seed_idxs])
