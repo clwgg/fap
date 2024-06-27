@@ -69,5 +69,5 @@ def plot_results(df, mutdf, min_vaf=0.01, outpath=None):
     sns.despine()
     plt.tight_layout()
     if outpath is not None:
-        plt.savefig(outpath + 'pop_plot.pdf')
+        plt.savefig(outpath + '/pop_plot.pdf')
     plt.show()

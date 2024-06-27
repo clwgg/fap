@@ -205,7 +205,7 @@ def process_data(out, muts, outdir, min_vaf=0.01, germline_cutoff=-1.*1/12., sav
     muts = muts[muts['mutation'] != 0].reset_index(drop=True)
     
     if save_files:
-        df.to_csv(outdir + 'post_pops.tsv', sep='\t', index=False)
-        muts.to_csv(outdir + 'post_muts.tsv', sep='\t', index=False)
+        df.to_csv(outdir + '/post_pops.tsv', sep='\t', index=False)
+        muts.to_csv(outdir + '/post_muts.tsv', sep='\t', index=False)
 
     return df, muts

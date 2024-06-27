@@ -19,11 +19,11 @@ mut_rate_polyp: 36.0  # Mutation rate for polyp
 polyp_init_time: 20 # Polyp initiation time
 
 # IO and Options
-outfile: "/home/rschenck/oak_dir/cluster/outputs/test_cpb/"  # Output dir
+outfile: "./outputs/"  # Output dir
 seed: 42  # Random seed for simulations
 max_t: 80  # Maximum time
 verbose: 0  # Verbose output
 mean_depth: 100  # Mean sequencing depth
-sd_depth: 5  # Standard deviation of sequencing depth
-sample_size: 25000  # Sample size of cells to take
+sd_depth: 10  # Standard deviation of sequencing depth
+sample_size: 10000  # Sample size of cells to take
 runexpandmuts: False
