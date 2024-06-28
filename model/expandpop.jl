@@ -11,7 +11,9 @@ function expandPop(model::Model_BD; group::String="Group", verbose::Bool=false, 
     birth_rate = model.birth_rate
     death_rate = model.death_rate
     mut_rate = model.mut_rate
+    stored_mut_rate = mut_rate
     adv_mut_rate = model.adv_mut_rate
+    stored_adv_mut_rate = adv_mut_rate
     s_coef = model.s_coef
     cellArr = model.cellArr
     adv_clones_arr = model.adv_clones_arr
@@ -45,7 +47,7 @@ function expandPop(model::Model_BD; group::String="Group", verbose::Bool=false, 
 
         adv_divs = 0 # Holder for number of advantageous divisions in case no adv cells
         if group=="inutero"
-
+            
             neu_divs = exponential_births(neu_pop, init_birth)
             total_divs = neu_divs
             if adv_pop > 0
@@ -54,7 +56,15 @@ function expandPop(model::Model_BD; group::String="Group", verbose::Bool=false, 
             end
             ndeaths = sum(rand(death_poisson, prevPop))
             replace = true
-
+            
+            # Remove need for germline mut filter and lower number of mutations stored.
+            if t<=1:
+                mut_rate = 0
+                adv_mut_rate = 0
+            else
+                mut_rate = stored_mut_rate
+                adv_mut_rate = stored_adv_mut_rate
+            end
         elseif group=="fission" || group=="polypfission"
             neu_divs = sum(rand(fission_poisson, abs(length(cellArr)-sum(adv_clones_arr))))
             total_divs = neu_divs

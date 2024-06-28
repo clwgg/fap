@@ -87,7 +87,6 @@ function build_output_table(cellGenomes, mutInductionTimes, driver_muts, group, 
         pop_size = length(cellGenomes)
     end
     
-
     raw_vafs, seed_origins = mutationFrequency(cellGenomes, pop_size, seed_origin)
     
     output_table = DataFrame(mutation = Int[], raw_vaf = Float64[], vaf = Float64[], t= Int[], is_driver = Int[], seed_parent = Int[], group = String[])

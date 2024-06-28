@@ -219,7 +219,6 @@ function main()
     cellArr = [0]
     parentCellArr = [1]
     cellArr[1] = cloneId
-    cellGenomes[1] = [0]
 
     mutInductionTimes = Dict(mutId => 0)
 
