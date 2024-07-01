@@ -48,6 +48,14 @@ function save_model_outputs(output_dir::String, outputs::Dict{String, Any})
     end
 end
 
+function write_arrays_to_file(arrays::Vector{Vector{T}}, filename::String) where T
+    open(filename, "w") do file
+        for array in arrays
+            println(file, join(array, " "))
+        end
+    end
+end
+
 #~~~~~~~~~ Parameters ~~~~~~~~~~#
 
 function main()
@@ -162,6 +170,16 @@ function main()
         help = "Sample size of cells to take"
         arg_type = Int
         default = 10000
+
+        "--purity"
+        help = "Purity of the sample"
+        arg_type = Float64
+        default = 1.0
+
+        "--runexpandmuts"
+        help = "Whether to expand mutations in the polyp only to recover subclonal mutations and adjust VAF based on purity."
+        arg_type = Bool
+        default = false
     end
     
     parsed_args = parse_args(s)
@@ -192,6 +210,7 @@ function main()
     mean_depth = parsed_args["mean_depth"]
     sd_depth = parsed_args["sd_depth"]
     sample_size = parsed_args["sample_size"]
+    purity = parsed_args["purity"]
 
     Random.seed!(parsed_args["seed"])
 
@@ -219,6 +238,7 @@ function main()
     cellArr = [0]
     parentCellArr = [1]
     cellArr[1] = cloneId
+    cellGenomes[1] = [0]
 
     mutInductionTimes = Dict(mutId => 0)
 
@@ -236,7 +256,8 @@ function main()
         origindict[cellArr[i]] = 0
     end
 
-    df1 = build_output_table(cellGenomes, m1.mutInductionTimes, driver_muts, "inutero", origindict, mean_depth, sd_depth, sample_size)
+    df1, vafs1 = build_output_table(cellGenomes, m1.mutInductionTimes, driver_muts, "inutero", origindict, mean_depth, sd_depth, sample_size=15000, mut_rate=Int(floor(mut_rate/2.)), purity=purity, samplehist=false, overdispersion=.001)
+    print(length(vafs1))
 
    #~~~~~~~~~~ STAGE 2 NORMAL: Timescale == 6 months
     m = Model_BD(initSize, birth_rate/2., (death_rate)/2., mut_rate/2., adv_mut_rate/2., s_coef, cellArr, adv_clones_arr, cellGenomes, parentCellArr, mutId, cloneId, mutInductionTimes)
@@ -250,7 +271,7 @@ function main()
         origindict[cellArr[i]] = 0
     end
 
-    df2 = build_output_table(cellGenomes, m.mutInductionTimes, driver_muts, "Normal", origindict, mean_depth, sd_depth, sample_size)
+    df2, vafs2 = build_output_table(cellGenomes, m.mutInductionTimes, driver_muts, "Normal", origindict, mean_depth, sd_depth, sample_size=15000, mut_rate=Int(floor(mut_rate/2.)), purity=purity, samplehist=false, overdispersion=.001)
 
     df = vcat(df1, df2)
 
@@ -281,8 +302,8 @@ function main()
 
     origindict = assign_seed_origin(polyp_cellGenomes, seed_genomes)
 
-    df_polyp = build_output_table(polyp_cellGenomes, m3.mutInductionTimes, polyp_driver_muts, "Polyp", origindict, mean_depth, sd_depth, sample_size)
-    
+    df_polyp, vaf_polyp = build_output_table(polyp_cellGenomes, m3.mutInductionTimes, polyp_driver_muts, "Polyp", origindict, mean_depth, sd_depth, sample_size=15000, mut_rate=Int(floor(mut_rate/2.)), purity=purity, samplehist=true, overdispersion=.001)
+    print(length(vaf_polyp))
     popsize = vcat(popsize1, popsize2)
 
     df = vcat(df, df_polyp)
@@ -329,6 +350,12 @@ function main()
         g["inutero"] = driver_muts
         g["fission"] = driver_muts_fission
         g["polypfission"] = polyp_driver_muts
+
+        # VAFs
+        g = create_group(file, "samplehist") # create a group
+        g["vafs_inutero"] = vafs1
+        g["vafs_fission"] = vafs2
+        g["vafs_polyp"] = vaf_polyp
     end
 
     output_dict = Dict("muts.tsv" => df, "empty" => "empty")
