@@ -7,7 +7,7 @@ using Random
 include("init.jl")
 include("incurmuts.jl")
 
-function expandPop(model::Model_BD; group::String="Group", verbose::Bool=false, init_birth::Float64=1.2, max_time::Int64=10)
+function expandPop(model::Model_BD; group::String="Group", verbose::Bool=false, init_birth::Float64=1.2, polyp_init_time::Int64=10, max_time::Int64=10)
     birth_rate = model.birth_rate
     death_rate = model.death_rate
     mut_rate = model.mut_rate
@@ -47,7 +47,7 @@ function expandPop(model::Model_BD; group::String="Group", verbose::Bool=false, 
 
         adv_divs = 0 # Holder for number of advantageous divisions in case no adv cells
         if group=="inutero"
-
+            t_offset = (t-9.) / 12.
             neu_divs = exponential_births(neu_pop, init_birth)
             total_divs = neu_divs
             if adv_pop > 0
@@ -66,6 +66,7 @@ function expandPop(model::Model_BD; group::String="Group", verbose::Bool=false, 
             end
 
         elseif group=="fission" || group=="polypfission"
+            t_offset = t-1.
             neu_divs = sum(rand(fission_poisson, abs(length(cellArr)-sum(adv_clones_arr))))
             total_divs = neu_divs
             if sum(adv_clones_arr) > 0
@@ -74,6 +75,7 @@ function expandPop(model::Model_BD; group::String="Group", verbose::Bool=false, 
             end
 
             if group == "polypfission"
+                t_offset = (polyp_init_time-1.) + (t-1.)
                 ndeaths = sum(rand(death_poisson, prevPop))
                 replace = true
                 if prevPop <= 20
@@ -112,7 +114,7 @@ function expandPop(model::Model_BD; group::String="Group", verbose::Bool=false, 
             # Record the time that each mutation occurred
             if nmuts > 0
                 for m in new_muts_incl_range
-                    model.mutInductionTimes[m] = t
+                    model.mutInductionTimes[m] = Float64(t_offset)
                 end
             end
         end

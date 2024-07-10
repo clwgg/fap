@@ -107,10 +107,10 @@ class inference_Model:
 				    domain=discrete_domain_founders, p_stay=0.6),
 				# 'polyp_init_time': pyabc.MultivariateNormalTransition(),
 				'polyp_init_time': pyabc.DiscreteJumpTransition(
-				    domain=discrete_domain_founders, p_stay=0.6),
+				    domain=discrete_init_time, p_stay=0.6),
 				's_coef_polyp': pyabc.MultivariateNormalTransition(),
 				# 'mut_rate_polyp': pyabc.MultivariateNormalTransition(),
-				'mut_rate_polyp': pyabc.DiscreteJumpTransition(domain=discrete_init_time, p_stay=0.6),
+				'mut_rate_polyp': pyabc.DiscreteJumpTransition(domain=discrete_domain_polyp_mut, p_stay=0.6),
 				'polyp_birth_rate': pyabc.MultivariateNormalTransition()
 			}
 		)

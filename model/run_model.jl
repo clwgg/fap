@@ -240,14 +240,15 @@ function main()
     cellArr[1] = cloneId
     cellGenomes[1] = [0]
 
-    mutInductionTimes = Dict(mutId => 0)
+    mutInductionTimes = Dict(mutId => 0.0)
+
 
     #~~~~~~~~~ STAGE 1 IN UTERO: Timescale == Months
     init_birth = log(initSize) / 9.0
 
     m1 = Model_BD(Int64(initSize), init_birth , death_rate / 12.0, mut_rate / 12.0, adv_mut_rate / 12.0, s_coef , cellArr, adv_clones_arr, cellGenomes, parentCellArr, mutId, cloneId, mutInductionTimes)
 
-    cellArr, cellGenomes, adv_clones_arr, mutId, driver_muts, model, popsize1 = expandPop(m1, group="inutero", verbose=verbose, init_birth=init_birth, max_time=9)
+    cellArr, cellGenomes, adv_clones_arr, mutId, driver_muts, model, popsize1 = expandPop(m1, group="inutero", verbose=verbose, init_birth=init_birth, polyp_init_time=Int(polyp_init_time), max_time=9)
 
     mutId_delineator = [mutId]
 
@@ -262,7 +263,7 @@ function main()
    #~~~~~~~~~~ STAGE 2 NORMAL: Timescale == 6 months
     m = Model_BD(initSize, birth_rate/2., (death_rate)/2., mut_rate/2., adv_mut_rate/2., s_coef, cellArr, adv_clones_arr, cellGenomes, parentCellArr, mutId, cloneId, mutInductionTimes)
 
-    cellArr, cellGenomes, adv_clones_arr, mutId, driver_muts_fission, model, popsize2 = expandPop(m, group="fission", verbose=verbose, max_time=Int(polyp_init_time))
+    cellArr, cellGenomes, adv_clones_arr, mutId, driver_muts_fission, model, popsize2 = expandPop(m, group="fission", verbose=verbose, polyp_init_time=Int(polyp_init_time), max_time=Int(polyp_init_time))
 
     push!(mutId_delineator, mutId)
 
@@ -298,7 +299,7 @@ function main()
     m3 = Model_BD(final_pop_size, polyp_birth_rate/2., plyp_death_rate/2., mut_rate_polyp/2., adv_mut_rate_polyp/2., s_coef_polyp, cellArr, adv_clones_arr, cellGenomes, parentCellArr, mutId, cloneId, mutInductionTimes)
     
     #~~~~~~~~ Expand population
-    cellArr, polyp_cellGenomes, adv_clones_arr, mutId, polyp_driver_muts, model, popsize3 = expandPop(m3, group="polypfission", verbose=verbose, max_time=Int(max_t) - Int(polyp_init_time))
+    cellArr, polyp_cellGenomes, adv_clones_arr, mutId, polyp_driver_muts, model, popsize3 = expandPop(m3, group="polypfission", verbose=verbose, polyp_init_time=Int(polyp_init_time), max_time=Int(max_t) - Int(polyp_init_time))
 
     origindict = assign_seed_origin(polyp_cellGenomes, seed_genomes)
 

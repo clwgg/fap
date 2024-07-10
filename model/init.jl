@@ -12,8 +12,7 @@ mutable struct Model
     parentCellArr::Array{Int64, 1}
     mutId::Int
     cloneId::Int
-    mutInductionTimes::Dict{Int, Int}
-    
+    mutInductionTimes::Dict{Int, Float64}
 
     # Constructor
     function Model(initSize::Int64 = 10^6,
@@ -27,7 +26,7 @@ mutable struct Model
             parentCellArr::Array{Int64} = [],
             mutId::Int = 0,
             cloneId::Int = 1,
-            mutInductionTimes::Dict{Int, Int} = Dict())
+            mutInductionTimes::Dict{Int, Float64} = Dict())
         new(initSize, birth_rate, mut_rate, adv_mut_rate, s_coef, cellArr, adv_clones_arr, cellGenomes, parentCellArr, mutId, cloneId, mutInductionTimes)
     end
 end
@@ -45,7 +44,7 @@ mutable struct Model_BD
     parentCellArr::Array{Int64, 1}
     mutId::Int
     cloneId::Int
-    mutInductionTimes::Dict{Int, Int}
+    mutInductionTimes::Dict{Int, Float64}
     
 
     # Constructor
@@ -61,7 +60,7 @@ mutable struct Model_BD
             parentCellArr::Array{Int64} = [],
             mutId::Int = 0,
             cloneId::Int = 1,
-            mutInductionTimes::Dict{Int, Int} = Dict())
+            mutInductionTimes::Dict{Int, Float64} = Dict())
         new(initSize, birth_rate, death_rate, mut_rate, adv_mut_rate, s_coef, cellArr, adv_clones_arr, cellGenomes, parentCellArr, mutId, cloneId, mutInductionTimes)
     end
 end

@@ -143,7 +143,8 @@ def run_model_job(parameters, julia='julia', model='run_model.jl', model_log='tm
         '--verbose', str(parameters['verbose']),
         '--mean_depth', str(parameters['mean_depth']),
         '--sd_depth', str(parameters['sd_depth']),
-        '--sample_size', str(parameters['sample_size'])
+        '--sample_size', str(parameters['sample_size']),
+        '--purity', str(parameters['purity'])
     ]
 
     cmd = [str(x) for x in args]
@@ -182,7 +183,7 @@ def process_data(out, muts, outdir, min_vaf=0.01, germline_cutoff=-1.*1/12., sav
     muts.loc[muts['mutation'].isin(all_drivers), 'is_driver'] = True
     # Adjust time for inutero
     # Monthly and 6 months adjustment
-    muts['t'] = muts.apply(lambda x: (x['t']-10.)/12. if x['group']=='inutero' else x['t']/2., axis=1)
+    # muts['t'] = muts.apply(lambda x: (x['t']-10.)/12. if x['group']=='inutero' else x['t']/2., axis=1)
 
     # Filter on 'sequenced' vaf
     muts = muts[muts['vaf']>=min_vaf].reset_index(drop=True)
