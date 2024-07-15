@@ -210,6 +210,7 @@ function main()
     mean_depth = parsed_args["mean_depth"]
     sd_depth = parsed_args["sd_depth"]
     sample_size = parsed_args["sample_size"]
+    runexpandmuts = parsed_args["runexpandmuts"]
     purity = parsed_args["purity"]
 
     Random.seed!(parsed_args["seed"])
@@ -303,7 +304,13 @@ function main()
 
     origindict = assign_seed_origin(polyp_cellGenomes, seed_genomes)
 
-    df_polyp, vaf_polyp = build_output_table(polyp_cellGenomes, m3.mutInductionTimes, polyp_driver_muts, "Polyp", origindict, mean_depth, sd_depth, sample_size=15000, mut_rate=Int(floor(mut_rate/2.)), purity=purity, samplehist=true, overdispersion=.001)
+    if runexpandmuts
+        samplehist = true
+    else
+        samplehist = false
+    end
+
+    df_polyp, vaf_polyp = build_output_table(polyp_cellGenomes, m3.mutInductionTimes, polyp_driver_muts, "Polyp", origindict, mean_depth, sd_depth, sample_size=15000, mut_rate=Int(floor(mut_rate/2.)), purity=purity, samplehist=samplehist, overdispersion=.001)
     print(length(vaf_polyp))
     popsize = vcat(popsize1, popsize2)
 

@@ -144,6 +144,7 @@ def run_model_job(parameters, julia='julia', model='run_model.jl', model_log='tm
         '--mean_depth', str(parameters['mean_depth']),
         '--sd_depth', str(parameters['sd_depth']),
         '--sample_size', str(parameters['sample_size']),
+        '--runexpandmuts', str(parameters['runexpandmuts']),
         '--purity', str(parameters['purity'])
     ]
 
