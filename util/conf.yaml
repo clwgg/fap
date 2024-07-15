@@ -27,3 +27,4 @@ mean_depth: 100  # Mean sequencing depth
 sd_depth: 10  # Standard deviation of sequencing depth
 sample_size: 10000  # Sample size of cells to take
 runexpandmuts: False
+purity: 1.0
